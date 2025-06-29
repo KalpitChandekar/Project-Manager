@@ -18,13 +18,13 @@ function Menu() {
   return (
     <div className="flex flex-col items-center gap-6">
       <BorderAll
-        className="text-orange-600 cursor-pointer"
+        className="text-slate-300 cursor-pointer"
         sx={{
           fontSize: "27px",
         }}
       />
       <Splitscreen
-        className="text-slate-300 cursor-pointer"
+        className="text-orange-600 cursor-pointer"
         sx={{
           fontSize: "25px",
         }}
