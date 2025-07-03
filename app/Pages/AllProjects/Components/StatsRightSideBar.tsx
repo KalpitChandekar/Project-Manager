@@ -2,7 +2,7 @@ import { Splitscreen } from "@mui/icons-material";
 
 const StatsRightSideBar = () => {
   return (
-    <div className="w-[22%] flex justify-end items-center">
+    <div className="w-[22%] flex justify-end items-center max-lg:hidden">
       <div className="h-[92%] w-[94%] bg-white rounded-l-3xl p-3 flex flex-col">
         <Header />
         <div

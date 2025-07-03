@@ -2,7 +2,7 @@ import { Circle, MoreVert, Splitscreen } from "@mui/icons-material";
 
 const SingleProjectCard = () => {
   return (
-    <li className="w-[300px] flex flex-col gap-8 rounded-lg p-7 bg-white">
+    <li className="h-fit flex flex-col gap-8 rounded-lg p-7 bg-white">
       <ProjectCardHeader />
       <ProjectCardBody />
       <ProjectCardFooter />

@@ -4,7 +4,7 @@ import TasksList from "./Components/TasksList";
 
 const AllTasksContainer = () => {
   return (
-    <div className="bg-slate-50 w-full p-10">
+    <div className="bg-slate-50 w-full p-10 max-sm:p-7">
       <TasksHeader />
       <TasksSubHeader />
       <TasksList />
