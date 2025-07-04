@@ -1,3 +1,6 @@
+"use client";
+
+import { useContextApp } from "@/app/ContexApp";
 import { Add, Menu, Search } from "@mui/icons-material";
 
 const TasksHeader = () => {
@@ -29,14 +32,21 @@ const TasksHeader = () => {
   }
 
   function AddTaskButton() {
+    const {
+      openSideBarObject: { setOpenSideBar, openSideBar },
+    } = useContextApp();
     return (
       <div className="flex gap-3 items-center">
         <button className="bg-orange-600 text-white text-[14px] rounded-md flex gap-1 items-center p-2 pr-3 max-sm:pr-2">
           <Add className="min-sm:mt-[2px]" sx={{ fontSize: "22px" }} />
           <span className="max-sm:hidden">New Task</span>
         </button>
-        <button className="text-slate-400 h-9 cursor-pointer hidden max-[940px]:block">
-          <Menu />
+
+        <button
+          onClick={() => setOpenSideBar(!openSideBar)}
+          className="text-slate-400 h-full cursor-pointer hidden max-[940px]:block"
+        >
+          <Menu sx={{ fontSize: "26px" }} />
         </button>
       </div>
     );

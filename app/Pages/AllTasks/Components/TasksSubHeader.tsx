@@ -14,7 +14,7 @@ const TasksSubHeader = () => {
         <div className="w-[41px] min-md:-mt-1 flex justify-center items-center h-[44px] bg-orange-100 rounded-md">
           <Splitscreen sx={{ fontSize: "21px" }} className="text-orange-600" />
         </div>
-        <ul className="flex flex-col gap-[7px] max-md:gap-[10px]">
+        <ul className="flex flex-col gap-[7px] max-sm:gap-[10px]">
           <li className="text-[17px] font-semibold flex gap-2 items-center">
             <div className="text-slate-700 flex gap-2 items-center">
               <span className="text-lg">All Projects</span>
@@ -28,7 +28,7 @@ const TasksSubHeader = () => {
             <li className="text-[12px] h-[4px] w-[280px] max-lg:w-[170px] bg-slate-200 rounded-md overflow-auto">
               <div className="w-1/2 h-[100%] bg-orange-600 rounded-r-xl"></div>
             </li>
-            <p className="text-[12px] text-slate-400 ml-3 max-md:hidden">
+            <p className="text-[12px] text-slate-400 ml-3 max-sm:hidden">
               20% Completed
             </p>
           </div>
