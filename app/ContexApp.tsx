@@ -1,26 +1,16 @@
 "use client";
 
 import { createContext, useState, useContext, useEffect } from "react";
-
-type AppType = {
-  openSideBarObject: {
-    openSideBar: boolean;
-    setOpenSideBar: React.Dispatch<React.SetStateAction<boolean>>;
-  };
-  isMobileViewObject: {
-    isMobileView: boolean;
-    setIsMobileView: React.Dispatch<React.SetStateAction<boolean>>;
-  };
-};
+import { AppType, SideBarMenuItem } from "./types/AppType";
 
 const defaultState: AppType = {
   openSideBarObject: {
     openSideBar: false,
     setOpenSideBar: () => {},
   },
-  isMobileViewObject: {
-    isMobileView: false,
-    setIsMobileView: () => {},
+  sideBarMenuObject: {
+    sideBarMenu: [],
+    setSiteBarMenu: () => {},
   },
 };
 
@@ -33,6 +23,23 @@ export default function ContextAppProvider({
 }) {
   const [openSideBar, setOpenSideBar] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
+  const [sideBarMenu, setSiteBarMenu] = useState<SideBarMenuItem[]>([
+    {
+      id: 1,
+      name: "All Projects",
+      isSelected: true,
+    },
+    {
+      id: 2,
+      name: "All Tasks",
+      isSelected: false,
+    },
+    {
+      id: 3,
+      name: "All Tasks",
+      isSelected: false,
+    },
+  ]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,11 +55,15 @@ export default function ContextAppProvider({
     }
   }, [isMobileView]);
 
+  useEffect(() => {
+    setOpenSideBar(false);
+  }, [sideBarMenu]);
+
   return (
     <ContextApp.Provider
       value={{
         openSideBarObject: { openSideBar, setOpenSideBar },
-        isMobileViewObject: { isMobileView, setIsMobileView },
+        sideBarMenuObject: { sideBarMenu, setSiteBarMenu },
       }}
     >
       {children}

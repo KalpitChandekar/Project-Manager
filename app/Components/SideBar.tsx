@@ -3,10 +3,12 @@
 import { BorderAll, Logout, Splitscreen, TaskAlt } from "@mui/icons-material";
 import { useContextApp } from "../ContexApp";
 import { useRef, useEffect } from "react";
+import { SvgIconProps } from "@mui/material";
 
 function SideBar() {
   const {
     openSideBarObject: { openSideBar, setOpenSideBar },
+    sideBarMenuObject: { sideBarMenu, setSiteBarMenu },
   } = useContextApp();
 
   const sideBarMenuRef = useRef<HTMLDivElement>(null);
@@ -60,35 +62,56 @@ function SideBar() {
   }
 
   function Menu() {
+    const iconMap: Record<string, React.ComponentType<SvgIconProps>> = {
+      "1": BorderAll,
+      "2": Splitscreen,
+      "3": Logout,
+    };
+
+    function handleClickedItem(id: number) {
+      const updateMenuSideBar = sideBarMenu.map((item) => {
+        if (item.id === id) {
+          return { ...item, isSelected: true };
+        }
+        return { ...item, isSelected: false };
+      });
+      setSiteBarMenu(updateMenuSideBar);
+    }
+
     return (
       <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-2">
-          <BorderAll
-            className="text-slate-300 cursor-pointer"
-            sx={{
-              fontSize: "27px",
-            }}
-          />
-          {openSideBar && <span className="text-slate-400">All Projects</span>}
-        </div>
-        <div className="flex items-center gap-2">
-          <Splitscreen
-            className="text-orange-600 cursor-pointer"
-            sx={{
-              fontSize: "25px",
-            }}
-          />
-          {openSideBar && <span className="text-orange-600">All Tasks</span>}
-        </div>
-        <div className="flex items-center gap-2">
-          <Logout
-            className="text-slate-300 cursor-pointer"
-            sx={{
-              fontSize: "25px",
-            }}
-          />
-          {openSideBar && <span className="text-slate-400">Logout</span>}
-        </div>
+        {sideBarMenu.map((menuItem) => {
+          const IconComponent = iconMap[menuItem.id.toString()];
+          return (
+            <div
+              onClick={() => {
+                if (menuItem.id === 1 || menuItem.id === 2) {
+                  handleClickedItem(menuItem.id);
+                }
+              }}
+              key={menuItem.id}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <IconComponent
+                className={`${
+                  menuItem.isSelected ? "text-orange-600" : "text-slate-300"
+                }`}
+                sx={{
+                  fontSize: "25px",
+                }}
+              />
+              {openSideBar && (
+                <span
+                  className={`${
+                    menuItem.isSelected ? "text-orange-600" : "text-slate-300"
+                  }`}
+                >
+                  {menuItem.name}
+                </span>
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   }
