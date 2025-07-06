@@ -12,6 +12,10 @@ const defaultState: AppType = {
     sideBarMenu: [],
     setSiteBarMenu: () => {},
   },
+  openProjectWindowObject: {
+    openProjectWindow: false,
+    setOpenProjectWindow: () => {},
+  },
 };
 
 const ContextApp = createContext<AppType>(defaultState);
@@ -41,6 +45,8 @@ export default function ContextAppProvider({
     },
   ]);
 
+  const [openProjectWindow, setOpenProjectWindow] = useState(false);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobileView(window.innerWidth < 940);
@@ -64,6 +70,7 @@ export default function ContextAppProvider({
       value={{
         openSideBarObject: { openSideBar, setOpenSideBar },
         sideBarMenuObject: { sideBarMenu, setSiteBarMenu },
+        openProjectWindowObject: { openProjectWindow, setOpenProjectWindow },
       }}
     >
       {children}

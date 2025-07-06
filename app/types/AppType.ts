@@ -14,4 +14,9 @@ export type AppType = {
     sideBarMenu: SideBarMenuItem[];
     setSiteBarMenu: React.Dispatch<React.SetStateAction<SideBarMenuItem[]>>;
   };
+
+  openProjectWindowObject: {
+    openProjectWindow: boolean;
+    setOpenProjectWindow: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 };
