@@ -4,6 +4,13 @@ export type SideBarMenuItem = {
   isSelected: boolean;
 };
 
+export type IconData = {
+  id: number;
+  name: string;
+  icon: React.ReactNode;
+  isSelected: boolean;
+};
+
 export type AppType = {
   openSideBarObject: {
     openSideBar: boolean;
@@ -18,5 +25,10 @@ export type AppType = {
   openProjectWindowObject: {
     openProjectWindow: boolean;
     setOpenProjectWindow: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+
+  allIconDataObject: {
+    allIconData: IconData[];
+    setAllIconData: React.Dispatch<React.SetStateAction<IconData[]>>;
   };
 };

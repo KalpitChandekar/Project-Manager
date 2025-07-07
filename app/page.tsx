@@ -5,6 +5,7 @@ import AllProjects from "./Pages/AllProjects/AllProjects";
 import AllTasksContainer from "./Pages/AllTasks/AllTasksContainer";
 import { ProjectWindow } from "./Components/Windows/ProjectWindow";
 import { useContextApp } from "./ContexApp";
+import IconWindow from "./Components/Windows/IconWindow";
 
 export default function Home() {
   const {
@@ -33,6 +34,7 @@ export default function Home() {
       <SideBar />
       {selectedComponent && selectedComponent}
       {openProjectWindow && <ProjectWindow />}
+      <IconWindow />
     </div>
   );
 }

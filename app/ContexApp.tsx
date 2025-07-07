@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useState, useContext, useEffect } from "react";
-import { AppType, SideBarMenuItem } from "./types/AppType";
+import { AppType, IconData, SideBarMenuItem } from "./types/AppType";
+import { allIconsArray } from "./Data/AllIcons";
 
 const defaultState: AppType = {
   openSideBarObject: {
@@ -15,6 +16,10 @@ const defaultState: AppType = {
   openProjectWindowObject: {
     openProjectWindow: false,
     setOpenProjectWindow: () => {},
+  },
+  allIconDataObject: {
+    allIconData: [],
+    setAllIconData: () => {},
   },
 };
 
@@ -44,8 +49,8 @@ export default function ContextAppProvider({
       isSelected: false,
     },
   ]);
-
   const [openProjectWindow, setOpenProjectWindow] = useState(false);
+  const [allIconData, setAllIconData] = useState<IconData[]>(allIconsArray);
 
   useEffect(() => {
     const handleResize = () => {
@@ -71,6 +76,7 @@ export default function ContextAppProvider({
         openSideBarObject: { openSideBar, setOpenSideBar },
         sideBarMenuObject: { sideBarMenu, setSiteBarMenu },
         openProjectWindowObject: { openProjectWindow, setOpenProjectWindow },
+        allIconDataObject: { allIconData, setAllIconData },
       }}
     >
       {children}
