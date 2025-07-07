@@ -1,3 +1,4 @@
+import { useContextApp } from "@/app/ContexApp";
 import { Add, Menu, Search } from "@mui/icons-material";
 
 const ProjectsHeader = () => {
@@ -29,11 +30,18 @@ const ProjectsHeader = () => {
   }
 
   function AddProjectButton() {
+    const {
+      openProjectWindowObject: { setOpenProjectWindow },
+    } = useContextApp();
+
     return (
       <div className="flex gap-3 items-center">
-        <button className="bg-orange-600 text-white text-[14px] rounded-md flex gap-1 items-center p-2 pr-3 max-sm:pr-2">
+        <button
+          onClick={() => setOpenProjectWindow(true)}
+          className="bg-orange-600 text-white text-[14px] rounded-md flex gap-1 items-center p-2 pr-3 max-sm:pr-2 cursor-pointer"
+        >
           <Add className="min-sm:mt-[2px]" sx={{ fontSize: "22px" }} />
-          <span className="max-sm:hidden">New Project</span>
+          <span className="max-sm:hidden ">New Project</span>
         </button>
         <button className="text-slate-400 h-9 cursor-pointer hidden max-[940px]:block">
           <Menu />

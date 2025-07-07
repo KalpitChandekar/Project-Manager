@@ -37,9 +37,9 @@ function SideBar() {
       ref={sideBarMenuRef}
       className={` ${
         openSideBar
-          ? "w-[280px] fixed shadow-xl"
+          ? "max-[600px]:w-[250px] w-[290px] fixed shadow-xl"
           : "w-[97px] max-[940px]:hidden"
-      } h-screen py-8 bg-white flex flex-col items-center justify-between transition-all z-[90]`}
+      } h-screen py-10 bg-white flex flex-col items-center justify-between transition-all z-[60]`}
     >
       <Logo />
       <Menu />

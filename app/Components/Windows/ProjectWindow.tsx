@@ -3,7 +3,7 @@ import { BorderAll, CloseOutlined, LibraryBooks } from "@mui/icons-material";
 
 export const ProjectWindow = () => {
   const {
-    openProjectWindowObject: { openProjectWindow, setOpenProjectWindow },
+    openProjectWindowObject: { openProjectWindow },
   } = useContextApp();
 
   return (
@@ -68,12 +68,10 @@ const ProjectInput = () => {
             className="w-full border-2 outline-none rounded-md p-[10px] text-[13px]"
           />
 
-          <p className="text-[11px] mt-2 text-red-500">
-            Project name must be unique
-          </p>
+          <p className="text-[11px] mt-2 text-red-500">Error </p>
         </div>
 
-        <div className="w-12 h-10 text-white flex items-center justify-between bg-gray-600 rounded-lg cursor-pointer">
+        <div className="w-12 h-10 text-white flex items-center justify-center bg-orange-600 rounded-lg cursor-pointer">
           <LibraryBooks />
         </div>
       </div>
@@ -100,7 +98,7 @@ const Footer = () => {
         type="submit"
         className="bg-orange-600 text-white text-[13px] p-2 px-4 rounded-md hover:bg-orange-700 transition-all"
       >
-        Create
+        Add Project
       </button>
     </div>
   );
