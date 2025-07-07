@@ -5,13 +5,14 @@ import AllProjects from "./Pages/AllProjects/AllProjects";
 import AllTasksContainer from "./Pages/AllTasks/AllTasksContainer";
 import { ProjectWindow } from "./Components/Windows/ProjectWindow";
 import { useContextApp } from "./ContexApp";
-import IconWindow from "./Components/Windows/IconWindow";
+import { IconWindow } from "./Components/Windows/IconWindow";
 
 export default function Home() {
   const {
     openSideBarObject: { openSideBar },
     sideBarMenuObject: { sideBarMenu },
     openProjectWindowObject: { openProjectWindow },
+    openIconWindowObject: { openIconWindow },
   } = useContextApp();
 
   const componentMap: Record<number, React.ReactNode> = {
@@ -34,7 +35,7 @@ export default function Home() {
       <SideBar />
       {selectedComponent && selectedComponent}
       {openProjectWindow && <ProjectWindow />}
-      <IconWindow />
+      {openIconWindow && <IconWindow />}
     </div>
   );
 }

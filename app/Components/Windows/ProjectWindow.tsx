@@ -11,6 +11,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEffect, useLayoutEffect } from "react";
+import { getIconComponent } from "@/app/functions/iconsActions";
 
 const schema = z.object({
   projectName: z
@@ -36,9 +37,14 @@ export const ProjectWindow = () => {
     resolver: zodResolver(schema),
   });
 
+  const {
+    selectedIconObject: { setSelectedIcon },
+  } = useContextApp();
+
   const onSubmit: SubmitHandler<FormData> = (data) => {
     console.log("Form data", data);
     handleClose();
+    setSelectedIcon(null);
   };
 
   const handleClose = () => {
@@ -71,6 +77,9 @@ export const ProjectWindow = () => {
 };
 
 const Header = ({ handleClose }: { handleClose: () => void }) => {
+  const {
+    openIconWindowObject: { setOpenIconWindow },
+  } = useContextApp();
   return (
     <div className="flex items-center justify-between pt-7 px-7">
       <div className="flex items-center gap-2">
@@ -83,7 +92,10 @@ const Header = ({ handleClose }: { handleClose: () => void }) => {
       <CloseOutlined
         sx={{ fontSize: "18px" }}
         className="text-slate-300 cursor-pointer"
-        onClick={handleClose}
+        onClick={() => {
+          handleClose();
+          setOpenIconWindow(false);
+        }}
       />
     </div>
   );
@@ -98,6 +110,8 @@ const ProjectInput = ({
 }) => {
   const {
     openProjectWindowObject: { openProjectWindow },
+    openIconWindowObject: { setOpenIconWindow },
+    selectedIconObject: { selectedIcon },
   } = useContextApp();
 
   useEffect(() => {
@@ -130,8 +144,17 @@ const ProjectInput = ({
           )}
         </div>
 
-        <div className="w-12 h-10 text-white flex items-center justify-center bg-orange-600 rounded-lg cursor-pointer">
-          <LibraryBooks />
+        <div
+          onClick={() => {
+            setOpenIconWindow(true);
+          }}
+          className="w-12 h-10 text-white flex items-center justify-center bg-orange-600 rounded-lg cursor-pointer"
+        >
+          {selectedIcon ? (
+            getIconComponent(selectedIcon?.name)
+          ) : (
+            <LibraryBooks />
+          )}
         </div>
       </div>
     </div>
@@ -139,10 +162,16 @@ const ProjectInput = ({
 };
 
 const Footer = ({ handleClose }: { handleClose: () => void }) => {
+  const {
+    selectedIconObject: { setSelectedIcon },
+  } = useContextApp();
   return (
     <div className="w-[102%] p-[12px] mt-8 mb-4 flex gap-3 items-center justify-end">
       <button
-        onClick={handleClose}
+        onClick={() => {
+          handleClose();
+          setSelectedIcon(null);
+        }}
         className="border border-slate-200 text-slate-400 text-[13px] p-2 px-6 rounded-md hover:border-slate-300 transition-all"
       >
         Cancel

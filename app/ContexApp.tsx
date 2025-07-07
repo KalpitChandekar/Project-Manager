@@ -21,6 +21,14 @@ const defaultState: AppType = {
     allIconData: [],
     setAllIconData: () => {},
   },
+  selectedIconObject: {
+    selectedIcon: null,
+    setSelectedIcon: () => {},
+  },
+  openIconWindowObject: {
+    openIconWindow: false,
+    setOpenIconWindow: () => {},
+  },
 };
 
 const ContextApp = createContext<AppType>(defaultState);
@@ -51,6 +59,8 @@ export default function ContextAppProvider({
   ]);
   const [openProjectWindow, setOpenProjectWindow] = useState(false);
   const [allIconData, setAllIconData] = useState<IconData[]>(allIconsArray);
+  const [selectedIcon, setSelectedIcon] = useState<IconData | null>(null);
+  const [openIconWindow, setOpenIconWindow] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -77,6 +87,8 @@ export default function ContextAppProvider({
         sideBarMenuObject: { sideBarMenu, setSiteBarMenu },
         openProjectWindowObject: { openProjectWindow, setOpenProjectWindow },
         allIconDataObject: { allIconData, setAllIconData },
+        selectedIconObject: { selectedIcon, setSelectedIcon },
+        openIconWindowObject: { openIconWindow, setOpenIconWindow },
       }}
     >
       {children}

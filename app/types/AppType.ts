@@ -9,6 +9,7 @@ export type IconData = {
   name: string;
   icon: React.ReactNode;
   isSelected: boolean;
+  label?: string;
 };
 
 export type AppType = {
@@ -30,5 +31,15 @@ export type AppType = {
   allIconDataObject: {
     allIconData: IconData[];
     setAllIconData: React.Dispatch<React.SetStateAction<IconData[]>>;
+  };
+
+  selectedIconObject: {
+    selectedIcon: IconData | null;
+    setSelectedIcon: React.Dispatch<React.SetStateAction<IconData | null>>;
+  };
+
+  openIconWindowObject: {
+    openIconWindow: boolean;
+    setOpenIconWindow: React.Dispatch<React.SetStateAction<boolean>>;
   };
 };
