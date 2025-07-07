@@ -31,6 +31,7 @@ const ProjectsHeader = () => {
 
   function AddProjectButton() {
     const {
+      openSideBarObject: { setOpenSideBar, openSideBar },
       openProjectWindowObject: { setOpenProjectWindow },
     } = useContextApp();
 
@@ -43,7 +44,10 @@ const ProjectsHeader = () => {
           <Add className="min-sm:mt-[2px]" sx={{ fontSize: "22px" }} />
           <span className="max-sm:hidden ">New Project</span>
         </button>
-        <button className="text-slate-400 h-9 cursor-pointer hidden max-[940px]:block">
+        <button
+          onClick={() => setOpenSideBar(!openSideBar)}
+          className="text-slate-400 h-9 cursor-pointer hidden max-[940px]:block"
+        >
           <Menu />
         </button>
       </div>
