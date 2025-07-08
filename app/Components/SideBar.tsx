@@ -4,6 +4,7 @@ import { BorderAll, Logout, Splitscreen, TaskAlt } from "@mui/icons-material";
 import { useContextApp } from "../ContexApp";
 import { useRef, useEffect } from "react";
 import { SvgIconProps } from "@mui/material";
+import { User } from "lucide-react";
 
 function SideBar() {
   const {
@@ -50,7 +51,7 @@ function SideBar() {
   function Profile() {
     return (
       <div className="flex items-center gap-2">
-        <div className="h-8 w-8 bg-orange-600 rounded-md"></div>
+        <User className="text-orange-400" />
         {openSideBar && (
           <ul>
             <li className="text-[14px] font-bold">John Doe</li>
