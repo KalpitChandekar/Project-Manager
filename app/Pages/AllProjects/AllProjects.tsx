@@ -1,4 +1,4 @@
-import AllProjectsSection from "./Components/AllProjectsSection";
+import { AllProjectsSection } from "./Components/AllProjectsSection";
 import ProjectSubHeader from "./Components/ProjectSubHeader";
 import ProjectsHeader from "./Components/ProjectsHeader";
 import StatsRightSideBar from "./Components/StatsRightSideBar";

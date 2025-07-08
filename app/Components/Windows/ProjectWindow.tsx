@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEffect, useLayoutEffect } from "react";
 import { getIconComponent } from "@/app/functions/iconsActions";
+import { addNewProject } from "@/app/functions/projectsAction";
 
 const schema = z.object({
   projectName: z
@@ -20,11 +21,13 @@ const schema = z.object({
     .max(30, { message: "Project name must be less than 30 characters" }),
 });
 
-type FormData = z.infer<typeof schema>;
+export type FormData = z.infer<typeof schema>;
 
 export const ProjectWindow = () => {
   const {
     openProjectWindowObject: { openProjectWindow, setOpenProjectWindow },
+    allProjectsObject: { allProjects, setAllProjects },
+    selectedIconObject: { selectedIcon },
   } = useContextApp();
 
   const {
@@ -32,6 +35,8 @@ export const ProjectWindow = () => {
     handleSubmit,
     // setValue,
     formState: { errors },
+    setFocus,
+    setError,
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -42,6 +47,28 @@ export const ProjectWindow = () => {
   } = useContextApp();
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
+    const existingProject = allProjects.find(
+      (project) =>
+        project.title.toLowerCase() === data.projectName.toLowerCase()
+    );
+
+    if (existingProject) {
+      setError("projectName", {
+        type: "manual",
+        message: "Project already exists",
+      });
+      setFocus("projectName");
+    } else {
+      addNewProject(
+        data,
+        allProjects,
+        setAllProjects,
+        setOpenProjectWindow,
+        selectedIcon,
+        reset
+      );
+    }
+
     console.log("Form data", data);
     handleClose();
     setSelectedIcon(null);

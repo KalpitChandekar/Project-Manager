@@ -3,6 +3,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { AppType, IconData, SideBarMenuItem } from "./types/AppType";
 import { allIconsArray } from "./Data/AllIcons";
+import { Project, projectsData } from "./Data/AllProjects";
 
 const defaultState: AppType = {
   openSideBarObject: {
@@ -28,6 +29,10 @@ const defaultState: AppType = {
   openIconWindowObject: {
     openIconWindow: false,
     setOpenIconWindow: () => {},
+  },
+  allProjectsObject: {
+    allProjects: [],
+    setAllProjects: () => {},
   },
 };
 
@@ -61,6 +66,7 @@ export default function ContextAppProvider({
   const [allIconData, setAllIconData] = useState<IconData[]>(allIconsArray);
   const [selectedIcon, setSelectedIcon] = useState<IconData | null>(null);
   const [openIconWindow, setOpenIconWindow] = useState(false);
+  const [allProjects, setAllProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -68,6 +74,18 @@ export default function ContextAppProvider({
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        setAllProjects(projectsData);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -89,6 +107,7 @@ export default function ContextAppProvider({
         allIconDataObject: { allIconData, setAllIconData },
         selectedIconObject: { selectedIcon, setSelectedIcon },
         openIconWindowObject: { openIconWindow, setOpenIconWindow },
+        allProjectsObject: { allProjects, setAllProjects },
       }}
     >
       {children}

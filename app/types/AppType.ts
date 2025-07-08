@@ -1,3 +1,5 @@
+import { Project } from "../Data/AllProjects";
+
 export type SideBarMenuItem = {
   id: number;
   name: string;
@@ -41,5 +43,9 @@ export type AppType = {
   openIconWindowObject: {
     openIconWindow: boolean;
     setOpenIconWindow: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+  allProjectsObject: {
+    allProjects: Project[];
+    setAllProjects: React.Dispatch<React.SetStateAction<Project[]>>;
   };
 };

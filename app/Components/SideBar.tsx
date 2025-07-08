@@ -51,7 +51,7 @@ function SideBar() {
   function Profile() {
     return (
       <div className="flex items-center gap-2">
-        <User className="text-orange-400" />
+        <User className="text-orange-600" />
         {openSideBar && (
           <ul>
             <li className="text-[14px] font-bold">John Doe</li>

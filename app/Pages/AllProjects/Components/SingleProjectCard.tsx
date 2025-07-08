@@ -1,6 +1,8 @@
-import { Circle, MoreVert, Splitscreen } from "@mui/icons-material";
+import { Circle, MoreVert } from "@mui/icons-material";
+import { Project } from "@/app/Data/AllProjects";
+import { getIconComponent } from "@/app/functions/iconsActions";
 
-const SingleProjectCard = () => {
+const SingleProjectCard = ({ project }: { project: Project }) => {
   return (
     <li className="h-fit flex flex-col gap-8 rounded-lg p-7 bg-white">
       <ProjectCardHeader />
@@ -13,11 +15,11 @@ const SingleProjectCard = () => {
     return (
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <div className="bg-orange-600 flex justify-center items-center w-[38px] h-[38px] rounded-md">
-            <Splitscreen className="text-white" sx={{ fontSize: "19px" }} />
+          <div className="bg-orange-600 flex justify-center items-center w-[38px] h-[38px] rounded-md text-white">
+            {getIconComponent(project.icon)}
           </div>
           <div className="flex flex-col">
-            <span className="text-[19px] font-bold">Project Title</span>
+            <span className="text-[19px] font-bold">{project.title}</span>
             <span className="text-[13px] text-slate-400">2 days ago</span>
           </div>
         </div>
