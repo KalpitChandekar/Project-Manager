@@ -34,7 +34,7 @@ export const projectsData: Project[] = [
     tasks: [
       {
         id: uuidv4(),
-        title: "Task 1",
+        title: "description 1",
         icon: "Movie",
         projectName: "Project",
         status: "In Progress",
@@ -44,7 +44,27 @@ export const projectsData: Project[] = [
       },
       {
         id: uuidv4(),
-        title: "Task 2",
+        title: "description 2",
+        icon: "Movie",
+        projectName: "Project",
+        status: "In Progress",
+        priority: "Low",
+        createdAt: "2021-01-01",
+        updatedAt: "2021-01-01",
+      },
+      {
+        id: uuidv4(),
+        title: "description 3",
+        icon: "Movie",
+        projectName: "Project",
+        status: "In Progress",
+        priority: "Low",
+        createdAt: "2021-01-01",
+        updatedAt: "2021-01-01",
+      },
+      {
+        id: uuidv4(),
+        title: "description 4",
         icon: "Movie",
         projectName: "Project",
         status: "In Progress",

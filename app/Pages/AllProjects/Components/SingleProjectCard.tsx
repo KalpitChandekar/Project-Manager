@@ -4,7 +4,7 @@ import { getIconComponent } from "@/app/functions/iconsActions";
 
 const SingleProjectCard = ({ project }: { project: Project }) => {
   return (
-    <li className="h-fit flex flex-col gap-8 rounded-lg p-7 bg-white">
+    <li className="h-[306px] flex flex-col gap-8 rounded-lg p-7 bg-white">
       <ProjectCardHeader />
       <ProjectCardBody />
       <ProjectCardFooter />
@@ -15,11 +15,13 @@ const SingleProjectCard = ({ project }: { project: Project }) => {
     return (
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <div className="bg-orange-600 flex justify-center items-center w-[38px] h-[38px] rounded-md text-white">
+          <div className="bg-orange-600 flex justify-center items-center w-[38px] h-[38px] rounded-md text-white text-[23px]">
             {getIconComponent(project.icon)}
           </div>
           <div className="flex flex-col">
-            <span className="text-[19px] font-bold">{project.title}</span>
+            <span className="text-[19px] font-bold">
+              {truncateString(project.title, 20)}
+            </span>
             <span className="text-[13px] text-slate-400">2 days ago</span>
           </div>
         </div>
@@ -33,16 +35,24 @@ const SingleProjectCard = ({ project }: { project: Project }) => {
 
   function ProjectCardBody() {
     return (
-      <ul className="text-slate-400 text-[13px] flex flex-col gap-2 ml-3">
-        <li className="flex items-center gap-2">
-          <Circle sx={{ fontSize: "8px" }} />
-          <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</span>
-        </li>
-        <li className="flex items-center gap-2">
-          <Circle sx={{ fontSize: "8px" }} />
-          <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</span>
-        </li>
-      </ul>
+      <div className="h-[80px] flex flex-col gap-3 mb-1">
+        <ul className="text-slate-400 text-[13px] flex flex-col gap-2 ml-3">
+          {project.tasks.slice(0, 3).map((task) => (
+            <li className="flex items-center gap-2" key={task.id}>
+              <Circle sx={{ fontSize: "8px" }} />
+              <span>{truncateString(task.title, 40)}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="text-[11px] text-slate-400">
+          {project.tasks.length > 3 && (
+            <span className="text-orange-600">
+              +{project.tasks.length - 3} more
+            </span>
+          )}
+        </div>
+      </div>
     );
   }
 
@@ -65,3 +75,10 @@ const SingleProjectCard = ({ project }: { project: Project }) => {
   }
 };
 export default SingleProjectCard;
+
+function truncateString(str: string, maxlength: number): string {
+  if (str.length > maxlength) {
+    return str.substring(0, maxlength) + "...";
+  }
+  return str;
+}
