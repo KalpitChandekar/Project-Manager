@@ -2,7 +2,7 @@ import { KeyboardArrowDown } from "@mui/icons-material";
 
 const ProjectSubHeader = () => {
   return (
-    <div className="mt-20 flex justify-between font-bold items-center">
+    <div className="mt-20 max-sm:mt-10 max-md:mt-15 flex justify-between font-bold items-center">
       <MyProjectsText />
       <SortByButton />
     </div>
