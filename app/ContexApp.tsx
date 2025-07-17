@@ -45,6 +45,14 @@ const defaultState: AppType = {
     openDropDown: false,
     setOpenDropDown: () => {},
   },
+  selectedProjectObject: {
+    selectedProject: null,
+    setSelectedProject: () => {},
+  },
+  openConfirmationWindowObject: {
+    openConfirmationWindow: false,
+    setOpenConfirmationWindow: () => {},
+  },
 };
 
 const ContextApp = createContext<AppType>(defaultState);
@@ -83,6 +91,9 @@ export default function ContextAppProvider({
     left: 0,
   });
   const [openDropDown, setOpenDropDown] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [openConfirmationWindow, setOpenConfirmationWindow] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -126,6 +137,11 @@ export default function ContextAppProvider({
         allProjectsObject: { allProjects, setAllProjects },
         dropDownPositionObject: { dropDownPosition, setDropDownPosition },
         openDropDownObject: { openDropDown, setOpenDropDown },
+        selectedProjectObject: { selectedProject, setSelectedProject },
+        openConfirmationWindowObject: {
+          openConfirmationWindow,
+          setOpenConfirmationWindow,
+        },
       }}
     >
       {children}

@@ -6,6 +6,7 @@ const MoreDropDown = () => {
   const {
     openDropDownObject: { openDropDown, setOpenDropDown },
     dropDownPositionObject: { dropDownPosition },
+    openConfirmationWindowObject: { setOpenConfirmationWindow },
   } = useContextApp();
 
   const [dropDownOption, setDropDownOption] = useState([
@@ -15,24 +16,31 @@ const MoreDropDown = () => {
 
   const menuRef = React.useRef<HTMLDivElement>(null);
 
+  const clickedItemHandler = (id: number) => {
+    if (id === 2) {
+      setOpenConfirmationWindow(true);
+      setOpenDropDown(false);
+    }
+  };
+
   useEffect(() => {
-    function handleClickOutsite(event: MouseEvent) {
+    function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setOpenDropDown(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutsite);
+    document.addEventListener("mousedown", handleClickOutside);
 
     if (openDropDown) {
-      document.addEventListener("mousedown", handleClickOutsite);
+      document.addEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "hidden";
     } else {
-      document.removeEventListener("mousedown", handleClickOutsite);
+      document.removeEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "";
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutsite);
+      document.removeEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "";
     };
   }, [openDropDown, setOpenDropDown]);
@@ -47,6 +55,7 @@ const MoreDropDown = () => {
     >
       {dropDownOption.map((dropDownOption) => (
         <div
+          onClick={() => clickedItemHandler(dropDownOption.id)}
           key={dropDownOption.id}
           className={`flex items-center gap-1 text-slate-400 cursor-pointer hover:text-orange-600 ${
             dropDownOption.id === 2 && "hover:text-red-600"

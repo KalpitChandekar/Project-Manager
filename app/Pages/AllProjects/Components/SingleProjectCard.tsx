@@ -23,6 +23,7 @@ const SingleProjectCard = ({ project }: { project: Project }) => {
     const {
       dropDownPositionObject: { setDropDownPosition },
       openDropDownObject: { setOpenDropDown },
+      selectedProjectObject: { setSelectedProject },
     } = useContextApp();
 
     function openDropDown(event: React.MouseEvent<HTMLDivElement>) {
@@ -36,6 +37,7 @@ const SingleProjectCard = ({ project }: { project: Project }) => {
           left: left + window.scrollX,
         });
         setOpenDropDown(true);
+        setSelectedProject(project);
       }
     }
 

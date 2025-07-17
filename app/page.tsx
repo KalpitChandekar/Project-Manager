@@ -7,13 +7,14 @@ import { ProjectWindow } from "./Components/Windows/ProjectWindow";
 import { useContextApp } from "./ContexApp";
 import { IconWindow } from "./Components/Windows/IconWindow";
 import MoreDropDown from "./Components/DropDowns/MoreDropDown";
-
+import ConfirmationWindow from "./Components/Windows/ConfirmationWindow";
 export default function Home() {
   const {
     openSideBarObject: { openSideBar },
     sideBarMenuObject: { sideBarMenu },
     openProjectWindowObject: { openProjectWindow },
     openIconWindowObject: { openIconWindow },
+    openConfirmationWindowObject: { openConfirmationWindow },
   } = useContextApp();
 
   const componentMap: Record<number, React.ReactNode> = {
@@ -26,11 +27,12 @@ export default function Home() {
   const selectedComponent = componentMap[ComponentKey + 1] || null;
   return (
     <div className="flex w-full h-screen poppins">
+      <ConfirmationWindow />
       <MoreDropDown />
-      {(openSideBar || openProjectWindow) && (
+      {(openSideBar || openProjectWindow || openConfirmationWindow) && (
         <div
           className={`w-full h-full ${
-            openProjectWindow ? "z-[70]" : "z-[50]"
+            openProjectWindow || openConfirmationWindow ? "z-[70]" : "z-[50]"
           } fixed opacity-30 bg-slate-800`}
         ></div>
       )}

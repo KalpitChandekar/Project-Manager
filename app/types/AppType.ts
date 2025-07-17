@@ -61,9 +61,16 @@ export type AppType = {
       }>
     >;
   };
-
   openDropDownObject: {
     openDropDown: boolean;
     setOpenDropDown: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+  selectedProjectObject: {
+    selectedProject: Project | null;
+    setSelectedProject: React.Dispatch<React.SetStateAction<Project | null>>;
+  };
+  openConfirmationWindowObject: {
+    openConfirmationWindow: boolean;
+    setOpenConfirmationWindow: React.Dispatch<React.SetStateAction<boolean>>;
   };
 };
