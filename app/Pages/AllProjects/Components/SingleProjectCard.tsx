@@ -1,6 +1,8 @@
 import { Circle, LibraryAdd, MoreVert } from "@mui/icons-material";
 import { Project } from "@/app/Data/AllProjects";
 import { getIconComponent } from "@/app/functions/iconsActions";
+import { useContextApp } from "@/app/ContexApp";
+import { useRef } from "react";
 
 const SingleProjectCard = ({ project }: { project: Project }) => {
   const daysLeft = calculateDaysLeft(project.createdAt);
@@ -17,6 +19,26 @@ const SingleProjectCard = ({ project }: { project: Project }) => {
   );
 
   function ProjectCardHeader({ daysLeft }: { daysLeft: number }) {
+    const threeDotsRef = useRef<HTMLDivElement>(null);
+    const {
+      dropDownPositionObject: { setDropDownPosition },
+      openDropDownObject: { setOpenDropDown },
+    } = useContextApp();
+
+    function openDropDown(event: React.MouseEvent<HTMLDivElement>) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (threeDotsRef.current) {
+        const rect = threeDotsRef.current.getBoundingClientRect();
+        const { top, left } = rect;
+        setDropDownPosition({
+          top: top + window.scrollY + 30,
+          left: left + window.scrollX,
+        });
+        setOpenDropDown(true);
+      }
+    }
+
     return (
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
@@ -35,7 +57,11 @@ const SingleProjectCard = ({ project }: { project: Project }) => {
           </div>
         </div>
 
-        <div>
+        <div
+          ref={threeDotsRef}
+          onClick={openDropDown}
+          className="w-6 h-6 flex justify-center items-center rounded-full hover:bg-slate-100"
+        >
           <MoreVert className="text-slate-400 text-[19px] cursor-pointer" />
         </div>
       </div>

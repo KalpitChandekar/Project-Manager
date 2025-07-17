@@ -34,6 +34,17 @@ const defaultState: AppType = {
     allProjects: [],
     setAllProjects: () => {},
   },
+  dropDownPositionObject: {
+    dropDownPosition: {
+      top: 0,
+      left: 0,
+    },
+    setDropDownPosition: () => {},
+  },
+  openDropDownObject: {
+    openDropDown: false,
+    setOpenDropDown: () => {},
+  },
 };
 
 const ContextApp = createContext<AppType>(defaultState);
@@ -67,6 +78,11 @@ export default function ContextAppProvider({
   const [selectedIcon, setSelectedIcon] = useState<IconData | null>(null);
   const [openIconWindow, setOpenIconWindow] = useState(false);
   const [allProjects, setAllProjects] = useState<Project[]>([]);
+  const [dropDownPosition, setDropDownPosition] = useState({
+    top: 0,
+    left: 0,
+  });
+  const [openDropDown, setOpenDropDown] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -105,9 +121,11 @@ export default function ContextAppProvider({
         sideBarMenuObject: { sideBarMenu, setSiteBarMenu },
         openProjectWindowObject: { openProjectWindow, setOpenProjectWindow },
         allIconDataObject: { allIconData, setAllIconData },
-        selectedIconObject: { selectedIcon, setSelectedIcon },
         openIconWindowObject: { openIconWindow, setOpenIconWindow },
+        selectedIconObject: { selectedIcon, setSelectedIcon },
         allProjectsObject: { allProjects, setAllProjects },
+        dropDownPositionObject: { dropDownPosition, setDropDownPosition },
+        openDropDownObject: { openDropDown, setOpenDropDown },
       }}
     >
       {children}

@@ -4,7 +4,7 @@ import ProjectsHeader from "./Components/ProjectsHeader";
 import StatsRightSideBar from "./Components/StatsRightSideBar";
 const AllProjects = () => {
   return (
-    <div className="bg-slate-50 w-full min-h-screen flex">
+    <div className="bg-slate-50 w-full min-h-screen flex flex-grow overflow-auto">
       <AllProjectsArea />
       <StatsRightSideBar />
     </div>

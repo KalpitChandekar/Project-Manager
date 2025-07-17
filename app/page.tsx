@@ -6,6 +6,7 @@ import AllTasksContainer from "./Pages/AllTasks/AllTasksContainer";
 import { ProjectWindow } from "./Components/Windows/ProjectWindow";
 import { useContextApp } from "./ContexApp";
 import { IconWindow } from "./Components/Windows/IconWindow";
+import MoreDropDown from "./Components/DropDowns/MoreDropDown";
 
 export default function Home() {
   const {
@@ -25,6 +26,7 @@ export default function Home() {
   const selectedComponent = componentMap[ComponentKey + 1] || null;
   return (
     <div className="flex w-full h-screen poppins">
+      <MoreDropDown />
       {(openSideBar || openProjectWindow) && (
         <div
           className={`w-full h-full ${
