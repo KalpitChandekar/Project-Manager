@@ -8,6 +8,8 @@ import { useContextApp } from "./ContexApp";
 import { IconWindow } from "./Components/Windows/IconWindow";
 import MoreDropDown from "./Components/DropDowns/MoreDropDown";
 import ConfirmationWindow from "./Components/Windows/ConfirmationWindow";
+import { Toaster } from "react-hot-toast";
+
 export default function Home() {
   const {
     openSideBarObject: { openSideBar },
@@ -27,6 +29,7 @@ export default function Home() {
   const selectedComponent = componentMap[ComponentKey + 1] || null;
   return (
     <div className="flex w-full h-screen poppins">
+      <Toaster />
       <ConfirmationWindow />
       <MoreDropDown />
       {(openSideBar || openProjectWindow || openConfirmationWindow) && (

@@ -1,16 +1,46 @@
 import { useContextApp } from "@/app/ContexApp";
+import { deleteProject } from "@/app/functions/projectsAction";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const ConfirmationWindow = () => {
-  const { openConfirmationWindowObject, selectedProjectObject } =
-    useContextApp();
-  const { openConfirmationWindow, setOpenConfirmationWindow } =
-    openConfirmationWindowObject;
-  const { setSelectedProject } = selectedProjectObject;
+  const {
+    openConfirmationWindowObject: {
+      openConfirmationWindow,
+      setOpenConfirmationWindow,
+    },
+    selectedProjectObject: { setSelectedProject, selectedProject },
+    allProjectsObject: { allProjects, setAllProjects },
+  } = useContextApp();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const closeConfirmationWindow = () => {
     setOpenConfirmationWindow(false);
     setSelectedProject(null);
   };
+
+  async function deleteFunction() {
+    try {
+      setIsLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      deleteProject(
+        selectedProject,
+        setSelectedProject,
+        allProjects,
+        setAllProjects,
+        setOpenConfirmationWindow
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error("Error deleting project");
+    } finally {
+      setIsLoading(false);
+      setOpenConfirmationWindow(false);
+      toast.success("Project deleted successfully");
+    }
+  }
 
   return (
     <div
@@ -32,8 +62,11 @@ const ConfirmationWindow = () => {
           >
             Cancel
           </button>
-          <button className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg">
-            Delete
+          <button
+            onClick={deleteFunction}
+            className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg"
+          >
+            {isLoading ? "Deleting..." : "Delete"}
           </button>
         </div>
       </div>
