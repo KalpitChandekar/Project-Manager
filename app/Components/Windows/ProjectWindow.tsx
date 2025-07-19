@@ -10,9 +10,10 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { getIconComponent } from "@/app/functions/iconsActions";
 import { addNewProject } from "@/app/functions/projectsAction";
+import { toast } from "react-hot-toast";
 
 const schema = z.object({
   projectName: z
@@ -29,6 +30,8 @@ export const ProjectWindow = () => {
     allProjectsObject: { allProjects, setAllProjects },
     selectedIconObject: { selectedIcon },
   } = useContextApp();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -59,6 +62,19 @@ export const ProjectWindow = () => {
       });
       setFocus("projectName");
     } else {
+      projectFunction(data);
+    }
+
+    console.log("Form data", data);
+    handleClose();
+    setSelectedIcon(null);
+  };
+
+  async function projectFunction(data: FormData) {
+    try {
+      setIsLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       addNewProject(
         data,
         allProjects,
@@ -67,12 +83,14 @@ export const ProjectWindow = () => {
         selectedIcon,
         reset
       );
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
+      toast.success("Project added successfully");
     }
-
-    console.log("Form data", data);
-    handleClose();
-    setSelectedIcon(null);
-  };
+  }
 
   const handleClose = () => {
     setOpenProjectWindow(false);
