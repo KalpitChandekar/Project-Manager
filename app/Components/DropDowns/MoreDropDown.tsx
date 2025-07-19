@@ -7,6 +7,7 @@ const MoreDropDown = () => {
     openDropDownObject: { openDropDown, setOpenDropDown },
     dropDownPositionObject: { dropDownPosition },
     openConfirmationWindowObject: { setOpenConfirmationWindow },
+    openProjectWindowObject: { setOpenProjectWindow },
   } = useContextApp();
 
   const [dropDownOption, setDropDownOption] = useState([
@@ -17,10 +18,13 @@ const MoreDropDown = () => {
   const menuRef = React.useRef<HTMLDivElement>(null);
 
   const clickedItemHandler = (id: number) => {
+    if (id === 1) {
+      setOpenProjectWindow(true);
+    }
     if (id === 2) {
       setOpenConfirmationWindow(true);
-      setOpenDropDown(false);
     }
+    setOpenDropDown(false);
   };
 
   useEffect(() => {
