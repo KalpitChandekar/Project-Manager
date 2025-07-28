@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'TaskFlow - Project Management App',
   description: 'A modern project and task management application',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
@@ -18,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} font-sans`}>
         <ProjectProvider>
           <div className="flex min-h-screen bg-gray-50">
             <Sidebar />

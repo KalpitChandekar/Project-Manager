@@ -32,11 +32,11 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
     <Card className="group hover:shadow-lg transition-all duration-200 border border-gray-200 hover:border-gray-300">
       <CardContent className="p-6">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center">
-            <IconComponent className="w-6 h-6 text-red-600" />
+          <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center">
+            <IconComponent className="w-6 h-6 text-purple-600" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 group-hover:text-red-600 transition-colors">
+            <h3 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">
               {project.name}
             </h3>
             <p className="text-sm text-gray-500">
@@ -54,7 +54,7 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
         
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div 
-            className="bg-red-600 h-2 rounded-full transition-all duration-300"
+            className="bg-purple-600 h-2 rounded-full transition-all duration-300"
             style={{ width: `${completionPercentage}%` }}
           />
         </div>
@@ -69,7 +69,7 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
           variant="outline"
           size="sm"
           onClick={() => onEdit(project)}
-          className="flex-1 hover:bg-gray-50"
+          className="flex-1 hover:bg-purple-50"
         >
           <Edit className="w-4 h-4 mr-2" />
           Edit
@@ -78,7 +78,7 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
           variant="outline"
           size="sm"
           onClick={handleDelete}
-          className="flex-1 hover:bg-red-50 hover:text-red-600 hover:border-red-200"
+          className="flex-1 hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200"
         >
           <Trash2 className="w-4 h-4 mr-2" />
           Delete

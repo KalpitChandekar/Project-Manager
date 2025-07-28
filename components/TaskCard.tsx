@@ -25,7 +25,7 @@ const statusConfig = {
 const priorityConfig = {
   'low': { label: 'Low', color: 'text-green-600' },
   'medium': { label: 'Medium', color: 'text-yellow-600' },
-  'high': { label: 'High', color: 'text-red-600' },
+  'high': { label: 'High', color: 'text-purple-600' },
 };
 
 export function TaskCard({ task, project, onEdit }: TaskCardProps) {
@@ -119,7 +119,7 @@ export function TaskCard({ task, project, onEdit }: TaskCardProps) {
                   variant="ghost"
                   size="sm"
                   onClick={handleDelete}
-                  className="h-7 w-7 p-0 hover:bg-red-50 hover:text-red-600"
+                  className="h-7 w-7 p-0 hover:bg-purple-50 hover:text-purple-600"
                   title="Delete task"
                 >
                   <Trash2 className="w-3 h-3" />

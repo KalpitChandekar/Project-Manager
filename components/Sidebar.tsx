@@ -20,7 +20,7 @@ export function Sidebar() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       <div className="flex items-center gap-2 p-6 border-b">
-        <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
+        <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
           <CheckSquare className="w-5 h-5 text-white" />
         </div>
         <span className="font-bold text-xl">TaskFlow</span>
@@ -38,7 +38,7 @@ export function Sidebar() {
                   className={cn(
                     'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                     isActive 
-                      ? 'bg-red-100 text-red-700' 
+                      ? 'bg-purple-100 text-purple-700' 
                       : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                   )}
                 >
@@ -75,7 +75,7 @@ export function Sidebar() {
       {/* Mobile Sidebar */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="sm" className="lg:hidden fixed top-4 left-4 z-40">
+          <Button variant="ghost" size="sm" className="lg:hidden fixed top-4 right-4 z-40">
             <Menu className="w-5 h-5" />
           </Button>
         </SheetTrigger>

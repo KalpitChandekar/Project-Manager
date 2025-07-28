@@ -79,7 +79,7 @@ export default function TasksPage() {
           </div>
           
           <div className="flex items-center gap-3">
-            <Button onClick={handleCreateTask} className="bg-red-600 hover:bg-red-700">
+            <Button onClick={handleCreateTask} className="bg-purple-600 hover:bg-purple-700">
               <Plus className="w-4 h-4 mr-2" />
               New Task
             </Button>
@@ -128,10 +128,10 @@ export default function TasksPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Completion Rate</p>
-                <p className="text-2xl font-bold text-red-600">{taskStats.completionRate}%</p>
+                <p className="text-2xl font-bold text-purple-600">{taskStats.completionRate}%</p>
               </div>
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <Search className="w-6 h-6 text-red-600" />
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <Search className="w-6 h-6 text-purple-600" />
               </div>
             </div>
           </div>
@@ -239,7 +239,7 @@ export default function TasksPage() {
                 <p className="text-gray-600 mb-6">
                   All tasks are completed or create a new task to get started
                 </p>
-                <Button onClick={handleCreateTask} className="bg-red-600 hover:bg-red-700">
+                <Button onClick={handleCreateTask} className="bg-purple-600 hover:bg-purple-700">
                   <Plus className="w-4 h-4 mr-2" />
                   Create New Task
                 </Button>

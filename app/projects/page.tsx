@@ -72,7 +72,7 @@ export default function ProjectsPage() {
           </div>
           
           <div className="flex items-center gap-3">
-            <Button onClick={handleCreateProject} className="bg-red-600 hover:bg-red-700">
+            <Button onClick={handleCreateProject} className="bg-purple-600 hover:bg-purple-700">
               <Plus className="w-4 h-4 mr-2" />
               New Project
             </Button>
@@ -87,8 +87,8 @@ export default function ProjectsPage() {
                 <p className="text-sm text-gray-600">Total Projects</p>
                 <p className="text-2xl font-bold text-gray-900">{totalProjects}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Search className="w-6 h-6 text-blue-600" />
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <Search className="w-6 h-6 text-purple-600" />
               </div>
             </div>
           </div>
@@ -170,7 +170,7 @@ export default function ProjectsPage() {
               }
             </p>
             {!searchQuery && (
-              <Button onClick={handleCreateProject} className="bg-red-600 hover:bg-red-700">
+              <Button onClick={handleCreateProject} className="bg-purple-600 hover:bg-purple-700">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Your First Project
               </Button>
