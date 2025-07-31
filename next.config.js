@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Remove the static export configuration
+  // output: 'export', // Remove this line
+  
+  // Enable Server Actions
+  experimental: {
+    serverActions: true,
+  },
+  
   eslint: {
     ignoreDuringBuilds: true,
   },

@@ -2,11 +2,15 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, FolderOpen, CheckSquare, User, X } from 'lucide-react';
+import { Menu, FolderOpen, CheckSquare, User, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useUser, useClerk } from '@clerk/nextjs';
+import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 const navigation = [
   { name: 'Projects', href: '/projects', icon: FolderOpen },
@@ -15,7 +19,19 @@ const navigation = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useUser();
+  const { signOut } = useClerk();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push('/landing');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
@@ -51,17 +67,40 @@ export function Sidebar() {
         </ul>
       </nav>
       
-      <div className="p-4 border-t">
-        <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-            <User className="w-4 h-4 text-gray-600" />
-          </div>
-          <div className="flex-1">
-            <div className="text-sm font-medium text-gray-900">John Doe</div>
-            <div className="text-xs text-gray-500">john@example.com</div>
-          </div>
+      <div className="flex items-center justify-between p-4 border-t">
+      <div className="flex items-center gap-3 min-w-0">
+        <Avatar className="h-8 w-8">
+          <AvatarImage src={user?.imageUrl} alt={user?.fullName || "User"} />
+          <AvatarFallback>
+            {user?.fullName?.charAt(0) || "U"}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col min-w-0">
+          <span className="text-sm font-medium text-gray-900 truncate">{user?.fullName || "User"}</span>
+          <span className="text-xs text-gray-500 truncate">{user?.emailAddresses?.[0]?.emailAddress || "No email"}</span>
         </div>
       </div>
+
+<TooltipProvider>
+
+<Tooltip>
+  <TooltipTrigger>
+  <Button
+        onClick={handleLogout}
+        variant="ghost"
+        size="icon"
+        className="text-gray-600 hover:text-purple-600 hover:bg-purple-50"
+        >
+        <LogOut className="w-4 h-4" />
+      </Button>
+  </TooltipTrigger>
+  <TooltipContent className="bg-purple-600 text-white">
+    Sign Out
+  </TooltipContent>
+ </Tooltip>
+</TooltipProvider>
+      
+    </div>
     </div>
   );
 

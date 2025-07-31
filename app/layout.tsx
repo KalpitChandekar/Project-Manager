@@ -3,15 +3,14 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ProjectProvider } from '@/contexts/ProjectContext';
 import { Sidebar } from '@/components/Sidebar';
+import { ClerkProvider } from '@clerk/nextjs';
+import { AuthLayout } from '@/components/AuthLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'TaskFlow - Project Management App',
-  description: 'A modern project and task management application',
-  icons: {
-    icon: '/favicon.ico',
-  },
+  title: 'TaskFlow',
+  description: 'Organize your tasks and projects efficiently',
 };
 
 export default function RootLayout({
@@ -20,17 +19,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} font-sans`}>
-        <ProjectProvider>
-          <div className="flex min-h-screen bg-gray-50">
-            <Sidebar />
-            <main className="flex-1">
+    <ClerkProvider>
+      <html lang="en">
+        <body className={inter.className}>
+          <ProjectProvider>
+            <AuthLayout>
               {children}
-            </main>
-          </div>
-        </ProjectProvider>
-      </body>
-    </html>
+            </AuthLayout>
+          </ProjectProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
