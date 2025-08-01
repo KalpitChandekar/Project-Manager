@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'TaskFlow - Project Management App',
   description: 'Organize your tasks and projects efficiently',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favico.svg',
   },
 };
 
