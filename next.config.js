@@ -5,7 +5,7 @@ const nextConfig = {
   
   // Enable Server Actions
   experimental: {
-    serverActions: true,
+    serverActions: {},
   },
   
   eslint: {
