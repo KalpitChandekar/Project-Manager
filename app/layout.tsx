@@ -8,7 +8,7 @@ import { AuthLayout } from '@/components/AuthLayout';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Flow - Project Management App',
+  title: 'TaskFlow - Project Management App',
   description: 'Organize your tasks and projects efficiently',
   icons: {
     icon: '/favicon.ico',
