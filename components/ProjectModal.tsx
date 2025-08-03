@@ -15,9 +15,10 @@ interface ProjectModalProps {
   onSave: (project: { name: string; icon: string }) => void;
   project?: Project | null;
   mode: 'create' | 'edit';
+  isLoading?: boolean;
 }
 
-export function ProjectModal({ isOpen, onClose, onSave, project, mode }: ProjectModalProps) {
+export function ProjectModal({ isOpen, onClose, onSave, project, mode, isLoading = false }: ProjectModalProps) {
   const [name, setName] = useState('');
   const [icon, setIcon] = useState('Folder');
   const [showIconPicker, setShowIconPicker] = useState(false);
@@ -33,13 +34,13 @@ export function ProjectModal({ isOpen, onClose, onSave, project, mode }: Project
   }, [project, mode, isOpen]);
 
   const handleSave = () => {
-    if (!name.trim()) return;
+    if (!name.trim() || isLoading) return;
     
     onSave({ name: name.trim(), icon });
-    onClose();
   };
 
   const handleClose = () => {
+    if (isLoading) return;
     setName('');
     setIcon('Folder');
     onClose();
@@ -66,6 +67,7 @@ export function ProjectModal({ isOpen, onClose, onSave, project, mode }: Project
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter project name"
                 className="w-full"
+                disabled={isLoading}
               />
             </div>
             
@@ -75,6 +77,7 @@ export function ProjectModal({ isOpen, onClose, onSave, project, mode }: Project
                 variant="outline"
                 onClick={() => setShowIconPicker(true)}
                 className="w-full justify-start gap-2 h-12"
+                disabled={isLoading}
               >
                 <IconComponent className="w-5 h-5" />
                 Click to change icon
@@ -83,11 +86,11 @@ export function ProjectModal({ isOpen, onClose, onSave, project, mode }: Project
           </div>
           
           <DialogFooter>
-            <Button variant="outline" onClick={handleClose}>
+            <Button variant="outline" onClick={handleClose} disabled={isLoading}>
               Cancel
             </Button>
-            <Button onClick={handleSave} disabled={!name.trim()}>
-              {mode === 'create' ? 'Create Project' : 'Save Changes'}
+            <Button onClick={handleSave} disabled={!name.trim() || isLoading}>
+              {isLoading ? 'Saving...' : mode === 'create' ? 'Create Project' : 'Save Changes'}
             </Button>
           </DialogFooter>
         </DialogContent>

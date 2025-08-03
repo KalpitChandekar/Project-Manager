@@ -18,9 +18,10 @@ interface TaskModalProps {
   task?: Task | null;
   mode: 'create' | 'edit';
   defaultProjectId?: string;
+  isLoading?: boolean;
 }
 
-export function TaskModal({ isOpen, onClose, onSave, task, mode, defaultProjectId }: TaskModalProps) {
+export function TaskModal({ isOpen, onClose, onSave, task, mode, defaultProjectId, isLoading = false }: TaskModalProps) {
   const { projects } = useProject();
   const [name, setName] = useState('');
   const [status, setStatus] = useState<Task['status']>('todo');
@@ -46,7 +47,7 @@ export function TaskModal({ isOpen, onClose, onSave, task, mode, defaultProjectI
   }, [task, mode, isOpen, defaultProjectId]);
 
   const handleSave = () => {
-    if (!name.trim() || !projectId) return;
+    if (!name.trim() || !projectId || isLoading) return;
     
     onSave({
       name: name.trim(),
@@ -55,10 +56,10 @@ export function TaskModal({ isOpen, onClose, onSave, task, mode, defaultProjectI
       projectId,
       priority,
     });
-    onClose();
   };
 
   const handleClose = () => {
+    if (isLoading) return;
     setName('');
     setStatus('todo');
     setIcon('');
@@ -88,20 +89,22 @@ export function TaskModal({ isOpen, onClose, onSave, task, mode, defaultProjectI
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter task name"
                 className="w-full"
+                disabled={isLoading}
               />
             </div>
 
             <div className="space-y-2">
               <Label>Project</Label>
-              <Select value={projectId} onValueChange={setProjectId}>
+              <Select value={projectId} onValueChange={setProjectId} disabled={isLoading}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a project" />
                 </SelectTrigger>
                 <SelectContent>
                   {projects.map((project) => {
                     const ProjectIcon = getIconComponent(project.icon);
+                    const projectIdValue = project.id || project._id || '';
                     return (
-                      <SelectItem key={project.id} value={project.id}>
+                      <SelectItem key={projectIdValue} value={projectIdValue}>
                         <div className="flex items-center gap-2">
                           <ProjectIcon className="w-4 h-4" />
                           {project.name}
@@ -115,7 +118,7 @@ export function TaskModal({ isOpen, onClose, onSave, task, mode, defaultProjectI
             
             <div className="space-y-2">
               <Label>Status</Label>
-              <Select value={status} onValueChange={(value) => setStatus(value as Task['status'])}>
+              <Select value={status} onValueChange={(value) => setStatus(value as Task['status'])} disabled={isLoading}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -129,7 +132,7 @@ export function TaskModal({ isOpen, onClose, onSave, task, mode, defaultProjectI
 
             <div className="space-y-2">
               <Label>Priority</Label>
-              <Select value={priority} onValueChange={(value) => setPriority(value as Task['priority'])}>
+              <Select value={priority} onValueChange={(value) => setPriority(value as Task['priority'])} disabled={isLoading}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -147,6 +150,7 @@ export function TaskModal({ isOpen, onClose, onSave, task, mode, defaultProjectI
                 variant="outline"
                 onClick={() => setShowIconPicker(true)}
                 className="w-full justify-start gap-2 h-12"
+                disabled={isLoading}
               >
                 {IconComponent ? (
                   <>
@@ -166,6 +170,7 @@ export function TaskModal({ isOpen, onClose, onSave, task, mode, defaultProjectI
                   size="sm"
                   onClick={() => setIcon('')}
                   className="text-xs text-gray-500"
+                  disabled={isLoading}
                 >
                   Remove icon
                 </Button>
@@ -174,11 +179,11 @@ export function TaskModal({ isOpen, onClose, onSave, task, mode, defaultProjectI
           </div>
           
           <DialogFooter>
-            <Button variant="outline" onClick={handleClose}>
+            <Button variant="outline" onClick={handleClose} disabled={isLoading}>
               Cancel
             </Button>
-            <Button onClick={handleSave} disabled={!name.trim() || !projectId}>
-              {mode === 'create' ? 'Create Task' : 'Save Changes'}
+            <Button onClick={handleSave} disabled={!name.trim() || !projectId || isLoading}>
+              {isLoading ? 'Saving...' : mode === 'create' ? 'Create Task' : 'Save Changes'}
             </Button>
           </DialogFooter>
         </DialogContent>

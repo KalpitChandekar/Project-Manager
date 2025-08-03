@@ -1,5 +1,6 @@
 export interface Project {
-  id: string;
+  _id?: string;
+  id?: string;
   name: string;
   icon: string;
   createdAt: Date;
@@ -9,7 +10,8 @@ export interface Project {
 }
 
 export interface Task {
-  id: string;
+  _id?: string;
+  id?: string;
   name: string;
   status: 'todo' | 'in-progress' | 'done';
   icon?: string;
@@ -22,11 +24,11 @@ export interface Task {
 export interface ProjectContextType {
   projects: Project[];
   tasks: Task[];
-  addProject: (project: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  updateProject: (id: string, updates: Partial<Project>) => void;
-  deleteProject: (id: string) => void;
-  addTask: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  updateTask: (id: string, updates: Partial<Task>) => void;
-  deleteTask: (id: string) => void;
+  addProject: (project: Omit<Project, 'id' | '_id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  updateProject: (id: string, updates: Partial<Project>) => Promise<void>;
+  deleteProject: (id: string) => Promise<void>;
+  addTask: (task: Omit<Task, 'id' | '_id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
   getProjectTasks: (projectId: string) => Task[];
 }

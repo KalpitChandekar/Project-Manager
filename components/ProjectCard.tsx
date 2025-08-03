@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +8,7 @@ import { Edit, Trash2 } from 'lucide-react';
 import { Project } from '@/types';
 import { useProject } from '@/contexts/ProjectContext';
 import { getIconComponent } from '@/utils/iconUtils';
+import { toast } from 'sonner';
 
 interface ProjectCardProps {
   project: Project;
@@ -16,15 +17,31 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, onEdit }: ProjectCardProps) {
   const { deleteProject, getProjectTasks } = useProject();
+  const [isDeleting, setIsDeleting] = useState(false);
   const IconComponent = getIconComponent(project.icon);
-  const tasks = getProjectTasks(project.id);
+  const projectId = project.id || project._id || '';
+  const tasks = getProjectTasks(projectId);
   const completedTasks = tasks.filter(task => task.status === 'done').length;
   const totalTasks = tasks.length;
   const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    if (!projectId) {
+      toast.error('Invalid project ID');
+      return;
+    }
+    
     if (window.confirm('Are you sure you want to delete this project? All associated tasks will be removed.')) {
-      deleteProject(project.id);
+      setIsDeleting(true);
+      try {
+        await deleteProject(projectId);
+        toast.success('Project deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting project:', error);
+        toast.error('Failed to delete project. Please try again.');
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
 
@@ -70,6 +87,7 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
           size="sm"
           onClick={() => onEdit(project)}
           className="flex-1 hover:bg-purple-50"
+          disabled={isDeleting}
         >
           <Edit className="w-4 h-4 mr-2" />
           Edit
@@ -79,9 +97,10 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
           size="sm"
           onClick={handleDelete}
           className="flex-1 hover:bg-purple-50 hover:text-purple-600 hover:border-purple-200"
+          disabled={isDeleting}
         >
           <Trash2 className="w-4 h-4 mr-2" />
-          Delete
+          {isDeleting ? 'Deleting...' : 'Delete'}
         </Button>
       </CardFooter>
     </Card>

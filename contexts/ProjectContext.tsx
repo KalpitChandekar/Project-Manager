@@ -1,42 +1,57 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
 import { Project, Task, ProjectContextType } from '@/types';
+import { projectAPI, taskAPI } from '@/lib/api';
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
 type ProjectAction =
+  | { type: 'SET_PROJECTS'; payload: Project[] }
+  | { type: 'SET_TASKS'; payload: Task[] }
   | { type: 'ADD_PROJECT'; payload: Project }
   | { type: 'UPDATE_PROJECT'; payload: { id: string; updates: Partial<Project> } }
   | { type: 'DELETE_PROJECT'; payload: string }
   | { type: 'ADD_TASK'; payload: Task }
   | { type: 'UPDATE_TASK'; payload: { id: string; updates: Partial<Task> } }
   | { type: 'DELETE_TASK'; payload: string }
-  | { type: 'LOAD_DATA'; payload: { projects: Project[]; tasks: Task[] } };
+  | { type: 'SET_LOADING'; payload: boolean };
 
 interface ProjectState {
   projects: Project[];
   tasks: Task[];
+  loading: boolean;
 }
 
 const initialState: ProjectState = {
   projects: [],
   tasks: [],
+  loading: false,
 };
 
 function projectReducer(state: ProjectState, action: ProjectAction): ProjectState {
   switch (action.type) {
+    case 'SET_PROJECTS':
+      return {
+        ...state,
+        projects: action.payload,
+      };
+    case 'SET_TASKS':
+      return {
+        ...state,
+        tasks: action.payload,
+      };
     case 'ADD_PROJECT':
       return {
         ...state,
-        projects: [...state.projects, action.payload],
+        projects: [action.payload, ...state.projects],
       };
     case 'UPDATE_PROJECT':
       return {
         ...state,
         projects: state.projects.map(project =>
           project.id === action.payload.id
-            ? { ...project, ...action.payload.updates, updatedAt: new Date() }
+            ? { ...project, ...action.payload.updates }
             : project
         ),
       };
@@ -49,14 +64,14 @@ function projectReducer(state: ProjectState, action: ProjectAction): ProjectStat
     case 'ADD_TASK':
       return {
         ...state,
-        tasks: [...state.tasks, action.payload],
+        tasks: [action.payload, ...state.tasks],
       };
     case 'UPDATE_TASK':
       return {
         ...state,
         tasks: state.tasks.map(task =>
           task.id === action.payload.id
-            ? { ...task, ...action.payload.updates, updatedAt: new Date() }
+            ? { ...task, ...action.payload.updates }
             : task
         ),
       };
@@ -65,10 +80,10 @@ function projectReducer(state: ProjectState, action: ProjectAction): ProjectStat
         ...state,
         tasks: state.tasks.filter(task => task.id !== action.payload),
       };
-    case 'LOAD_DATA':
+    case 'SET_LOADING':
       return {
-        projects: action.payload.projects,
-        tasks: action.payload.tasks,
+        ...state,
+        loading: action.payload,
       };
     default:
       return state;
@@ -77,63 +92,95 @@ function projectReducer(state: ProjectState, action: ProjectAction): ProjectStat
 
 export function ProjectProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(projectReducer, initialState);
+  const [initialized, setInitialized] = useState(false);
 
-  // Load data from localStorage on mount
+  // Load data from API on mount
   useEffect(() => {
-    const savedProjects = localStorage.getItem('projects');
-    const savedTasks = localStorage.getItem('tasks');
-    
-    if (savedProjects || savedTasks) {
-      dispatch({
-        type: 'LOAD_DATA',
-        payload: {
-          projects: savedProjects ? JSON.parse(savedProjects) : [],
-          tasks: savedTasks ? JSON.parse(savedTasks) : [],
-        },
-      });
-    }
+    const loadData = async () => {
+      try {
+        dispatch({ type: 'SET_LOADING', payload: true });
+        
+        // Load projects and tasks in parallel
+        const [projects, tasks] = await Promise.all([
+          projectAPI.getAll(),
+          taskAPI.getAll(),
+        ]);
+        
+        dispatch({ type: 'SET_PROJECTS', payload: projects });
+        dispatch({ type: 'SET_TASKS', payload: tasks });
+        setInitialized(true);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        // Fallback to empty arrays if API fails
+        dispatch({ type: 'SET_PROJECTS', payload: [] });
+        dispatch({ type: 'SET_TASKS', payload: [] });
+        setInitialized(true);
+      } finally {
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
+    };
+
+    loadData();
   }, []);
 
-  // Save to localStorage whenever state changes
-  useEffect(() => {
-    localStorage.setItem('projects', JSON.stringify(state.projects));
-    localStorage.setItem('tasks', JSON.stringify(state.tasks));
-  }, [state.projects, state.tasks]);
-
-  const addProject = (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const newProject: Project = {
-      ...projectData,
-      id: crypto.randomUUID(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    dispatch({ type: 'ADD_PROJECT', payload: newProject });
+  const addProject = async (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      const newProject = await projectAPI.create(projectData);
+      dispatch({ type: 'ADD_PROJECT', payload: newProject });
+    } catch (error) {
+      console.error('Error adding project:', error);
+      throw error;
+    }
   };
 
-  const updateProject = (id: string, updates: Partial<Project>) => {
-    dispatch({ type: 'UPDATE_PROJECT', payload: { id, updates } });
+  const updateProject = async (id: string, updates: Partial<Project>) => {
+    try {
+      const updatedProject = await projectAPI.update(id, updates);
+      dispatch({ type: 'UPDATE_PROJECT', payload: { id, updates: updatedProject } });
+    } catch (error) {
+      console.error('Error updating project:', error);
+      throw error;
+    }
   };
 
-  const deleteProject = (id: string) => {
-    dispatch({ type: 'DELETE_PROJECT', payload: id });
+  const deleteProject = async (id: string) => {
+    try {
+      await projectAPI.delete(id);
+      dispatch({ type: 'DELETE_PROJECT', payload: id });
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      throw error;
+    }
   };
 
-  const addTask = (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const newTask: Task = {
-      ...taskData,
-      id: crypto.randomUUID(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    dispatch({ type: 'ADD_TASK', payload: newTask });
+  const addTask = async (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      const newTask = await taskAPI.create(taskData);
+      dispatch({ type: 'ADD_TASK', payload: newTask });
+    } catch (error) {
+      console.error('Error adding task:', error);
+      throw error;
+    }
   };
 
-  const updateTask = (id: string, updates: Partial<Task>) => {
-    dispatch({ type: 'UPDATE_TASK', payload: { id, updates } });
+  const updateTask = async (id: string, updates: Partial<Task>) => {
+    try {
+      const updatedTask = await taskAPI.update(id, updates);
+      dispatch({ type: 'UPDATE_TASK', payload: { id, updates: updatedTask } });
+    } catch (error) {
+      console.error('Error updating task:', error);
+      throw error;
+    }
   };
 
-  const deleteTask = (id: string) => {
-    dispatch({ type: 'DELETE_TASK', payload: id });
+  const deleteTask = async (id: string) => {
+    try {
+      await taskAPI.delete(id);
+      dispatch({ type: 'DELETE_TASK', payload: id });
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      throw error;
+    }
   };
 
   const getProjectTasks = (projectId: string) => {
@@ -151,6 +198,18 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
     deleteTask,
     getProjectTasks,
   };
+
+  // Show loading state while initializing
+  if (!initialized) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Loading your projects...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <ProjectContext.Provider value={value}>

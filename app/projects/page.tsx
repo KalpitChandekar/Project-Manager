@@ -9,14 +9,16 @@ import { useProject } from '@/contexts/ProjectContext';
 import { ProjectCard } from '@/components/ProjectCard';
 import { ProjectModal } from '@/components/ProjectModal';
 import { Project } from '@/types';
+import { toast } from 'sonner';
 
 export default function ProjectsPage() {
-  const { projects, addProject, updateProject } = useProject();
+  const { projects, addProject, updateProject, tasks } = useProject();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('recent');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateProject = () => {
     setEditingProject(null);
@@ -30,11 +32,22 @@ export default function ProjectsPage() {
     setIsModalOpen(true);
   };
 
-  const handleSaveProject = (projectData: { name: string; icon: string }) => {
-    if (modalMode === 'create') {
-      addProject(projectData);
-    } else if (editingProject) {
-      updateProject(editingProject.id, projectData);
+  const handleSaveProject = async (projectData: { name: string; icon: string }) => {
+    setIsLoading(true);
+    try {
+      if (modalMode === 'create') {
+        await addProject(projectData);
+        toast.success('Project created successfully!');
+      } else if (editingProject) {
+        await updateProject(editingProject.id || editingProject._id || '', projectData);
+        toast.success('Project updated successfully!');
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error saving project:', error);
+      toast.error('Failed to save project. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,8 +68,9 @@ export default function ProjectsPage() {
   });
 
   const completedProjects = projects.filter(project => {
-    const tasks = JSON.parse(localStorage.getItem('tasks') || '[]').filter((task: any) => task.projectId === project.id);
-    return tasks.length > 0 && tasks.every((task: any) => task.status === 'done');
+    const projectId = project.id || project._id;
+    const projectTasks = tasks.filter(task => task.projectId === projectId);
+    return projectTasks.length > 0 && projectTasks.every(task => task.status === 'done');
   }).length;
 
   const totalProjects = projects.length;
@@ -149,7 +163,7 @@ export default function ProjectsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedProjects.map((project) => (
               <ProjectCard
-                key={project.id}
+                key={project.id || project._id}
                 project={project}
                 onEdit={handleEditProject}
               />
@@ -185,6 +199,7 @@ export default function ProjectsPage() {
           onSave={handleSaveProject}
           project={editingProject}
           mode={modalMode}
+          isLoading={isLoading}
         />
       </div>
     </div>

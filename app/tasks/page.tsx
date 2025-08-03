@@ -12,6 +12,7 @@ import { TaskCard } from '@/components/TaskCard';
 import { TaskModal } from '@/components/TaskModal';
 import { Task } from '@/types';
 import { getIconComponent } from '@/utils/iconUtils';
+import { toast } from 'sonner';
 
 export default function TasksPage() {
   const { projects, tasks, addTask, updateTask } = useProject();
@@ -22,6 +23,7 @@ export default function TasksPage() {
   const [selectedProject, setSelectedProject] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedPriority, setSelectedPriority] = useState('all');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateTask = () => {
     setEditingTask(null);
@@ -35,11 +37,22 @@ export default function TasksPage() {
     setIsModalOpen(true);
   };
 
-  const handleSaveTask = (taskData: { name: string; status: Task['status']; icon?: string; projectId: string; priority?: Task['priority'] }) => {
-    if (modalMode === 'create') {
-      addTask(taskData);
-    } else if (editingTask) {
-      updateTask(editingTask.id, taskData);
+  const handleSaveTask = async (taskData: { name: string; status: Task['status']; icon?: string; projectId: string; priority?: Task['priority'] }) => {
+    setIsLoading(true);
+    try {
+      if (modalMode === 'create') {
+        await addTask(taskData);
+        toast.success('Task created successfully!');
+      } else if (editingTask) {
+        await updateTask(editingTask.id || editingTask._id || '', taskData);
+        toast.success('Task updated successfully!');
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error saving task:', error);
+      toast.error('Failed to save task. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -158,8 +171,9 @@ export default function TasksPage() {
                 <SelectItem value="all">All Projects</SelectItem>
                 {projects.map((project) => {
                   const ProjectIcon = getIconComponent(project.icon);
+                  const projectId = project.id || project._id;
                   return (
-                    <SelectItem key={project.id} value={project.id}>
+                    <SelectItem key={projectId} value={projectId}>
                       <div className="flex items-center gap-2">
                         <ProjectIcon className="w-4 h-4" />
                         {project.name}
@@ -217,12 +231,12 @@ export default function TasksPage() {
             {tasksByStatus.ongoing.length > 0 ? (
               <div className="space-y-3">
                 {tasksByStatus.ongoing.map((task) => {
-                  const project = projects.find(p => p.id === task.projectId);
+                  const project = projects.find(p => (p.id || p._id) === task.projectId);
                   if (!project) return null;
                   
                   return (
                     <TaskCard
-                      key={task.id}
+                      key={task.id || task._id}
                       task={task}
                       project={project}
                       onEdit={handleEditTask}
@@ -251,12 +265,12 @@ export default function TasksPage() {
             {tasksByStatus.completed.length > 0 ? (
               <div className="space-y-3">
                 {tasksByStatus.completed.map((task) => {
-                  const project = projects.find(p => p.id === task.projectId);
+                  const project = projects.find(p => (p.id || p._id) === task.projectId);
                   if (!project) return null;
                   
                   return (
                     <TaskCard
-                      key={task.id}
+                      key={task.id || task._id}
                       task={task}
                       project={project}
                       onEdit={handleEditTask}
@@ -283,6 +297,7 @@ export default function TasksPage() {
           onSave={handleSaveTask}
           task={editingTask}
           mode={modalMode}
+          isLoading={isLoading}
         />
       </div>
     </div>
