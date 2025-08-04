@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useUser } from '@clerk/nextjs';
+import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 
@@ -9,29 +8,60 @@ interface AuthLayoutProps {
   children: React.ReactNode;
 }
 
+interface User {
+  id: string;
+  email: string;
+  name: string;
+}
+
 export function AuthLayout({ children }: AuthLayoutProps) {
-  const { user, isLoaded } = useUser();
   const router = useRouter();
   const pathname = usePathname();
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Public routes that don't require authentication
   const publicRoutes = ['/landing', '/sign-in', '/sign-up'];
   const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
 
   useEffect(() => {
-    if (isLoaded) {
-      if (!user && !isPublicRoute) {
-        // Redirect to landing page if user is not authenticated and trying to access protected route
-        router.push('/landing');
-      } else if (user && isPublicRoute) {
-        // Redirect to projects if user is authenticated and on public route
-        router.push('/projects');
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/auth/me');
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+          
+          // If user is authenticated and on public route, redirect to projects
+          if (isPublicRoute) {
+            router.push('/projects');
+          }
+        } else {
+          // User is not authenticated
+          setUser(null);
+          
+          // If trying to access protected route, redirect to landing
+          if (!isPublicRoute) {
+            router.push('/landing');
+          }
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        setUser(null);
+        
+        if (!isPublicRoute) {
+          router.push('/landing');
+        }
+      } finally {
+        setIsLoading(false);
       }
     }
-  }, [isLoaded, user, isPublicRoute, router, pathname]);
+
+    checkAuth();
+  }, [isPublicRoute, router, pathname]);
 
   // Show loading spinner while checking authentication
-  if (!isLoaded) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600"></div>
@@ -48,7 +78,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
   if (user) {
     return (
       <div className="flex h-screen">
-        <Sidebar />
+        <Sidebar user={user} />
         <main className="flex-1 overflow-auto">
           {children}
         </main>

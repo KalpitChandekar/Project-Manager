@@ -19,6 +19,11 @@ const taskSchema = new mongoose.Schema({
     ref: 'Project',
     required: true,
   },
+  userId: {
+    type: String,
+    required: true,
+    index: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAuthUser } from '@/lib/auth';
 import dbConnect from '@/lib/mongodb';
 import Task from '@/lib/models/Task';
 
@@ -8,8 +9,17 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const user = await getAuthUser();
+    
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     await dbConnect();
-    const task = await Task.findById(params.id);
+    const task = await Task.findOne({ _id: params.id, userId: user.id });
     
     if (!task) {
       return NextResponse.json(
@@ -34,11 +44,20 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const user = await getAuthUser();
+    
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     await dbConnect();
     const body = await request.json();
     
-    const task = await Task.findByIdAndUpdate(
-      params.id,
+    const task = await Task.findOneAndUpdate(
+      { _id: params.id, userId: user.id },
       { ...body, updatedAt: new Date() },
       { new: true, runValidators: true }
     );
@@ -66,8 +85,17 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const user = await getAuthUser();
+    
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     await dbConnect();
-    const task = await Task.findByIdAndDelete(params.id);
+    const task = await Task.findOneAndDelete({ _id: params.id, userId: user.id });
     
     if (!task) {
       return NextResponse.json(

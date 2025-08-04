@@ -1,12 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAuthUser } from '@/lib/auth';
 import dbConnect from '@/lib/mongodb';
 import Project from '@/lib/models/Project';
 
-// GET all projects
+// GET all projects for the authenticated user
 export async function GET() {
   try {
+    const user = await getAuthUser();
+    
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     await dbConnect();
-    const projects = await Project.find({}).sort({ createdAt: -1 });
+    const projects = await Project.find({ userId: user.id }).sort({ createdAt: -1 });
     
     return NextResponse.json(projects);
   } catch (error) {
@@ -21,10 +31,22 @@ export async function GET() {
 // POST create new project
 export async function POST(request: NextRequest) {
   try {
+    const user = await getAuthUser();
+    
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     await dbConnect();
     const body = await request.json();
     
-    const project = await Project.create(body);
+    const project = await Project.create({
+      ...body,
+      userId: user.id,
+    });
     
     return NextResponse.json(project, { status: 201 });
   } catch (error) {

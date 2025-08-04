@@ -7,26 +7,34 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, FolderOpen, CheckSquare, User, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useUser, useClerk } from '@clerk/nextjs';
-import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+}
+
+interface SidebarProps {
+  user: User;
+}
 
 const navigation = [
   { name: 'Projects', href: '/projects', icon: FolderOpen },
   { name: 'Tasks', href: '/tasks', icon: CheckSquare },
 ];
 
-export function Sidebar() {
+export function Sidebar({ user }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = useUser();
-  const { signOut } = useClerk();
 
   const handleLogout = async () => {
     try {
-      await signOut();
+      await fetch('/api/auth/signout', {
+        method: 'POST',
+      });
       router.push('/landing');
     } catch (error) {
       console.error('Error signing out:', error);
@@ -68,39 +76,36 @@ export function Sidebar() {
       </nav>
       
       <div className="flex items-center justify-between p-4 border-t">
-      <div className="flex items-center gap-3 min-w-0">
-        <Avatar className="h-8 w-8">
-          <AvatarImage src={user?.imageUrl} alt={user?.fullName || "User"} />
-          <AvatarFallback>
-            {user?.fullName?.charAt(0) || "U"}
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col min-w-0">
-          <span className="text-sm font-medium text-gray-900 truncate">{user?.fullName || "User"}</span>
-          <span className="text-xs text-gray-500 truncate">{user?.emailAddresses?.[0]?.emailAddress || "No email"}</span>
+        <div className="flex items-center gap-3 min-w-0">
+          <Avatar className="h-8 w-8">
+            <AvatarFallback>
+              {user.name.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm font-medium text-gray-900 truncate">{user.name}</span>
+            <span className="text-xs text-gray-500 truncate">{user.email}</span>
+          </div>
         </div>
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                onClick={handleLogout}
+                variant="ghost"
+                size="icon"
+                className="text-gray-600 hover:text-purple-600 hover:bg-purple-50"
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="bg-purple-600 text-white">
+              Sign Out
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
-
-<TooltipProvider>
-
-<Tooltip>
-  <TooltipTrigger>
-  <Button
-        onClick={handleLogout}
-        variant="ghost"
-        size="icon"
-        className="text-gray-600 hover:text-purple-600 hover:bg-purple-50"
-        >
-        <LogOut className="w-4 h-4" />
-      </Button>
-  </TooltipTrigger>
-  <TooltipContent className="bg-purple-600 text-white">
-    Sign Out
-  </TooltipContent>
- </Tooltip>
-</TooltipProvider>
-      
-    </div>
     </div>
   );
 

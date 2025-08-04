@@ -2,7 +2,6 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ProjectProvider } from '@/contexts/ProjectContext';
-import { ClerkProvider } from '@clerk/nextjs';
 import { AuthLayout } from '@/components/AuthLayout';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -21,16 +20,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <ProjectProvider>
-            <AuthLayout>
-              {children}
-            </AuthLayout>
-          </ProjectProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        <ProjectProvider>
+          <AuthLayout>
+            {children}
+          </AuthLayout>
+        </ProjectProvider>
+      </body>
+    </html>
   );
 }
