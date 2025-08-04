@@ -173,7 +173,7 @@ export default function TasksPage() {
                   const ProjectIcon = getIconComponent(project.icon);
                   const projectId = project.id || project._id;
                   return (
-                    <SelectItem key={projectId} value={projectId}>
+                    <SelectItem key={projectId} value={String(projectId)}>
                       <div className="flex items-center gap-2">
                         <ProjectIcon className="w-4 h-4" />
                         {project.name}
